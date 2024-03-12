@@ -11,6 +11,26 @@ class TreeNode(object):
         self.right = None
         self.height = 1
 
+class Data(object):
+    def __init__(self, term, sentence, score):
+        self.term = term
+        self.sentence = sentence
+        self.score = score
+
+    def __str__(self):
+        return self.term
+
+    def __eq__(self, other):
+        return self.term == other.term
+
+    def __lt__(self, other):
+        return self.term < other.term
+    def __le__(self, other):
+        return self.term <= other.term
+    def __gt__(self, other):
+        return self.term > other.term
+    def __ge__(self, other):
+        return self.term >= other.term
 
 class AVLTree(object):
 
@@ -155,14 +175,15 @@ class AVLTree(object):
             self.printHelper(currPtr.left, indent, False)
             self.printHelper(currPtr.right, indent, True)
 
+    def loadData(fileName):
+        with open(fileName, "r") as f:
+            lines = f.readlines()
+            root = None
 
-myTree = AVLTree()
-root = None
-nums = [33, 13, 52, 9, 21, 61, 8, 11]
-for num in nums:
-    root = myTree.insert_node(root, num)
-myTree.printHelper(root, "", True)
-key = 13
-root = myTree.delete_node(root, key)
-print("After Deletion: ")
-myTree.printHelper(root, "", True)
+            for line in lines:
+                column = line.split("\t")
+                data = Data(column[0], column[1], column[2])
+
+
+
+
