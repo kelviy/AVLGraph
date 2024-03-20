@@ -1,57 +1,22 @@
-import random
 from matplotlib import animation
-from src.python_plotting.AVLTree import AVLTree, Data
 import matplotlib.pyplot as plt
 import numpy as np
 
+def main():
+    # plotGraphsAni()
+    plotGraphs(False)
 
-def loadData(fileName, N):
-    # TODO: make randomised subsets of size N
-    with open(fileName, "r") as f:
-        lines = f.readlines()
-        myTree = AVLTree()
-        root = None
-
-        if N != 50000:
-            start = random.randint(0, 50000-N)
-        else:
-            start = 0
-
-        for line in lines[start:start+N]:
-            column = line.strip().split("\t")
-            data = Data(column[0], column[1], eval(column[2]))
-            root = myTree.insert_node(root, data)
-
-        myTree.clear_count()
-        return (myTree, root)
-
-
-def save_insert_count(counts, N):
-    #with open("data/insertData.txt", "a") as f:
-    with open("insertDataClean.txt", "a") as f:
-        for i in counts:
-            print(f"{N}\t{i}", file=f)
-
-
-def save_search_count(counts, N):
-    with open("data/searchData.txt", "a") as f:
-    # with open("searchDataClean.txt", "a") as f:
-        for i in counts:
-            print(f"{N}\t{i}", file=f)
-
-
-def readCounts():
+def readCounts(file_count, file_search):
     list_graph_points = ListGraphPoints()
-    with open("data/insertCount.txt", "r") as f:
-    # with open("insertDataClean.txt", "r") as f:
+
+    with open(file_count, "r") as f:
         lines = f.readlines()
 
         for line in lines:
             line = line.strip().split("\t")
             list_graph_points.add_count_point(eval(line[0]), eval(line[1]))
 
-    #with open("data/searchCount.txt", "r") as f:
-    with open("searchDataClean.txt", "r") as f:
+    with open(file_search, "r") as f:
         lines = f.readlines()
 
         for line in lines:
@@ -78,24 +43,7 @@ class ListGraphPoints:
 
 
 def plotGraphsAni():
-    experiment_data = readCounts()
-    figure, axis = plt.subplots(2, 1, figsize=(10, 6))
 
-    x_log = np.linspace(1, 50_000, 10_000)
-    y_log = 3 * np.log(x_log)
-    axis[1].plot(x_log, y_log, c="purple")
-    axis[0].plot(x_log, y_log, c="purple")
-
-    insert_scatter = axis[0].scatter(experiment_data.countx[0], experiment_data.county[0], s=10, c='green')
-    search_scatter = axis[1].scatter(experiment_data.searchx[0], experiment_data.searchy[0], s=10, c='blue')
-
-    axis[1].grid(True, which="both")
-    axis[0].grid(True, which="both")
-    # axis.set_xscale("log")
-    axis[1].set(ylim = [0,50], xlabel="Size of AVL Tree", ylabel="Number of comparisons")
-    axis[0].set(ylim = [0,50], xlabel="Size of AVL Tree", ylabel="Number of comparisons")
-    axis[0].set_title("Insert Comparisons")
-    axis[1].set_title("Search Comparisons")
     def update(frame):
         # for each frame, update the data stored on each artist.
         x = x_log[:frame]
@@ -110,90 +58,74 @@ def plotGraphsAni():
         search_scatter.set_offsets(search_data)
         return (insert_scatter, search_scatter)
 
-
-    ani = animation.FuncAnimation(fig=figure, func=update, frames=150, interval=1)
-    #axis.plot()
-    plt.tight_layout()
-
-    plt.show()
-
-    # ani = animation.FuncAnimation(fig=fig, func=update, frames=40, interval=30)
-    # plt.savefig("log.png")
-
-def plotGraphs():
-    experiment_data = readCounts()
-    figure, axis = plt.subplots(2, 1, layout='constrained')
-
-    x_log = np.linspace(1, 50_000, 100_000)
-    y_log = 3 * np.log(x_log)
-    axis[0].plot(x_log, y_log, c="purple")
-    axis[1].plot(x_log, y_log, c="purple")
-
-    axis[0].scatter(experiment_data.countx, experiment_data.county, s=3, c="green")
-    axis[1].scatter(experiment_data.searchx, experiment_data.searchy, s=3, c="blue")
-
+    # initialization of plots and settings
+    figure, axis = plt.subplots(2, 1, figsize=(10, 6))
+    # Grid Setting
     axis[1].grid(True, which="both")
     axis[0].grid(True, which="both")
+    # x, y labels and range
+    axis[1].set(ylim = [0,50], xlabel="Size of AVL Tree", ylabel="Number of comparisons")
+    axis[0].set(ylim = [0,50], xlabel="Size of AVL Tree", ylabel="Number of comparisons")
+    # setting titles
     axis[0].set_title("Insert Comparisons")
-    axis[0].set(xlabel="Size of AVL Tree", ylabel="Number of comparisons")
     axis[1].set_title("Search Comparisons")
-    axis[1].set(xlabel="Size of AVL Tree", ylabel="Number of comparisons")
+    # removes overlap
+    plt.tight_layout()
 
+    # loading data
+    experiment_data = readCounts("data/insertCount.txt", "data/searchCount.txt")
 
+    # TODO: change log graph to curves of best fit
+    # plotting log graphs for both figures
+    x_log = np.linspace(1, 50_000, 10_000)
+    y_log = 3 * np.log(x_log)
+    axis[1].plot(x_log, y_log, c="purple")
+    axis[0].plot(x_log, y_log, c="purple")
+
+    # plotting scatter plots for respective search and counts
+    insert_scatter = axis[0].scatter(experiment_data.countx[0], experiment_data.county[0], s=10, c='green')
+    search_scatter = axis[1].scatter(experiment_data.searchx[0], experiment_data.searchy[0], s=10, c='blue')
+
+    # Animation function - uses the update function to animate
+    ani = animation.FuncAnimation(fig=figure, func=update, frames=190, interval=1)
+
+    # Displaying plot
     plt.show()
 
-    # plt.savefig("log.png")
+def plotGraphs(save):
+    # initialization of plots and settings
+    figure, axis = plt.subplots(2, 1, figsize=(10, 6))
+    # Grid Setting
+    axis[1].grid(True, which="both")
+    axis[0].grid(True, which="both")
+    # x, y labels and range
+    axis[1].set(ylim=[0, 50], xlabel="Size of AVL Tree", ylabel="Number of comparisons")
+    axis[0].set(ylim=[0, 50], xlabel="Size of AVL Tree", ylabel="Number of comparisons")
+    # setting titles
+    axis[0].set_title("Insert Comparisons")
+    axis[1].set_title("Search Comparisons")
+    # Removes overlap
+    plt.tight_layout()
 
+    # loading data
+    experiment_data = readCounts("data/insertCount.txt", "data/searchCount.txt")
 
-def experiment(N):
-    myTreeData, root = loadData("GenericsKB.txt", N)
-    search_counts = []
-    insert_counts = []
+    # TODO: change log graph to curves of best fit
+    # plotting log graphs for both figures
+    x_log = np.linspace(1, 50_000, 10_000)
+    y_log = 3 * np.log(x_log)
+    axis[1].plot(x_log, y_log, c="purple")
+    axis[0].plot(x_log, y_log, c="purple")
 
-    with open("GenericsKB-queries.txt", "r") as f:
-        queries = f.readlines()
+    # plotting scatter plots for respective search and counts
+    axis[0].scatter(experiment_data.countx, experiment_data.county, s=10, c='green')
+    axis[1].scatter(experiment_data.searchx, experiment_data.searchy, s=10, c='blue')
 
-    # Search queries
-    for i in queries:
-        data = Data(i.strip(), None, 0)
-        result = myTreeData.search(root, data)
-        search_counts.append(myTreeData.get_search_count())
-
-        if result is None:
-            root = myTreeData.insert_node(root, data)
-            insert_counts.append(myTreeData.get_insert_count())
-            root = myTreeData.delete_node(root, data)
-
-        # if result is not None:
-        #     print(result.key)
-        # else:
-        #     print("Value not found")
-
-    save_search_count(search_counts, N)
-    save_insert_count(insert_counts, N)
-
-    #Insert Queries
-    #
-    # for i in queries:
-    #     data = Data(i.strip(), None, 0)
-    #     root = myTreeData.insert_node(root, data)
-    #     insert_counts.append(myTreeData.get_insert_count())
-    #     root = myTreeData.delete_node(root, data)
-    #
-    # save_search_count(insert_counts, N)
-
-def main():
-    # fp = open('data/searchData.txt', 'w')
-    # fp.close()
-    # fp = open('data/insertData.txt', 'w')
-    # fp.close()
-    #
-    # log_range = [10, 100, 1000, 2000, 5000, 10000, 15000, 25000, 43000, 50000]
-    # # for i in [10 ** i for i in range(1, 5)]:
-    # for i in log_range:
-    #     experiment(i)
-
-    plotGraphsAni()
+    # just displays the plot or saves the graph as a png
+    if save:
+        plt.savefig("AVL_comparison_graph.png")
+    else:
+        plt.show()
 
 if __name__ == '__main__':
     main()
