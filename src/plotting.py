@@ -1,12 +1,12 @@
 from matplotlib import animation
 import matplotlib.pyplot as plt
 import numpy as np
-from src.ListGraphPoints import ListGraphPoints
+from ListGraphPoints import ListGraphPoints
 
 
 def main():
-    # plotGraphsAni()
-    plotGraphs(False)
+    plotGraphsAni()
+    # plotGraphs(False)
 
 
 def readCounts(file_count, file_search):

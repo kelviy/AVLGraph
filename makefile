@@ -9,9 +9,9 @@ JCFLAGS = -d "bin/"
 # .java files of the project
 SOURCES = $(wildcard src/*.java)
 
-all: build run_array
+all: build run
 
-run_array:
+run:
 	$(JAVA) $(JFLAGS) Main
 
 build:
