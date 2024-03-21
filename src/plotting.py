@@ -1,6 +1,7 @@
 from matplotlib import animation
 import matplotlib.pyplot as plt
 import numpy as np
+from src.ListGraphPoints import ListGraphPoints
 
 
 def main():
@@ -26,110 +27,6 @@ def readCounts(file_count, file_search):
             list_graph_points.add_search_point(eval(line[0]), eval(line[1]))
 
     return list_graph_points
-
-
-class ListGraphPoints:
-    def __init__(self):
-        self.countx = []
-        self.county = []
-        self.searchx = []
-        self.searchy = []
-
-    def add_count_point(self, x, y):
-        self.countx.append(x)
-        self.county.append(y)
-
-    def add_search_point(self, x, y):
-        self.searchx.append(x)
-        self.searchy.append(y)
-
-    def get_insert_min(self):
-        return self.get_min_count(self.countx, self.county)
-
-    def get_insert_max(self):
-        return self.get_max_count(self.countx, self.county)
-
-    def get_insert_average(self):
-        return self.get_average_count(self.countx, self.county)
-
-    def get_search_min(self):
-        return self.get_min_count(self.searchx, self.searchy)
-
-    def get_search_max(self):
-        return self.get_max_count(self.searchx, self.searchy)
-
-    def get_search_average(self):
-        return self.get_average_count(self.searchx, self.searchy)
-
-    def get_min_count(self, listx, listy):
-        group = listx[0]
-        min_value = listy[0]
-        min_listx = []
-        min_listy = []
-
-        for i in range(len(listx)):
-            if group != listx[i]:
-                min_listx.append(group)
-                min_listy.append(min_value)
-
-                group = listx[i]
-                min_value = listy[i]
-            else:
-                if min_value > listy[i]:
-                    min_value = listy[i]
-
-        min_listx.append(group)
-        min_listy.append(min_value)
-
-        return min_listx, min_listy
-
-    def get_max_count(self, listx, listy):
-        group = listx[0]
-        max_value = listy[0]
-        max_listx = []
-        max_listy = []
-
-        for i in range(len(listx)):
-            if group != listx[i]:
-                max_listx.append(group)
-                max_listy.append(max_value)
-
-                group = listx[i]
-                max_value = listy[i]
-            else:
-                if max_value < listy[i]:
-                    max_value = listy[i]
-
-        max_listx.append(group)
-        max_listy.append(max_value)
-
-        return max_listx, max_listy
-
-    def get_average_count(self, listx, listy):
-        group = listx[0]
-        sum = 0
-        count = 0
-        average_listx = []
-        average_listy = []
-
-        for i in range(len(listx)):
-            if group != listx[i] and count != 0:
-                average_listx.append(group)
-                average_listy.append(round(sum / count))
-
-                group = listx[i]
-                sum = 0
-                count = 0
-                sum += listy[i]
-                count += 1
-            else:
-                sum += listy[i]
-                count += 1
-
-        average_listx.append(group)
-        average_listy.append(round(sum / count))
-
-        return average_listx, average_listy
 
 
 def plotGraphsAni():
@@ -182,33 +79,34 @@ def plotGraphsAni():
     # loading data
     experiment_data = readCounts("data/insertCount.txt", "data/searchCount.txt")
 
-    # TODO: change log graph to curves of best fit
     # plotting log graphs for both figures
     x_log = np.linspace(1, 50_000, 10_000)
-    y_log = 3 * np.log(x_log)
-    axis[1].plot(x_log, y_log, c="purple", label="3 * log (x)")
-    axis[0].plot(x_log, y_log, c="purple", label="3 * log (x)")
+    y_log_insert = 3 * np.log(x_log)
+    y_log_search = 2 * np.log(x_log)
+    axis[0].plot(x_log, y_log_insert, c="blue", label="3 * log (x)", linewidth=10, alpha=0.25)
+    axis[1].plot(x_log, y_log_search, c="blue", label="2 * log (x)", linewidth=10, alpha=0.25)
 
+    # alpha=0.6, edgecolors='none' - setting for transparency
     # plotting scatter plots for respective search and counts
-    insert_scatter = axis[0].scatter(experiment_data.countx[0], experiment_data.county[0], s=10, c='green',
+    insert_scatter = axis[0].scatter(experiment_data.countx[0], experiment_data.county[0], s=10, c='black',
                                      label="count data")
-    search_scatter = axis[1].scatter(experiment_data.searchx[0], experiment_data.searchy[0], s=10, c='blue',
+    search_scatter = axis[1].scatter(experiment_data.searchx[0], experiment_data.searchy[0], s=10, c='black',
                                      label="search data")
 
     # plotting min max and average
     insert_min_list = experiment_data.get_insert_min()
-    insert_min_plot = axis[0].plot(insert_min_list[0][0], insert_min_list[1][0], label="min case")[0]
+    insert_min_plot = axis[0].plot(insert_min_list[0][0], insert_min_list[1][0], label="min case", alpha=0.7)[0]
     insert_max_list = experiment_data.get_insert_max()
-    insert_max_plot = axis[0].plot(insert_max_list[0][0], insert_max_list[1][0], label="max case")[0]
+    insert_max_plot = axis[0].plot(insert_max_list[0][0], insert_max_list[1][0], label="max case", c='red', alpha=0.7)[0]
     insert_ave_list = experiment_data.get_insert_average()
-    insert_ave_plot = axis[0].plot(insert_ave_list[0][0], insert_ave_list[1][0], label="average case")[0]
+    insert_ave_plot = axis[0].plot(insert_ave_list[0][0], insert_ave_list[1][0], label="average case", c='orange', alpha=0.7)[0]
     # search data
     search_min_list = experiment_data.get_search_min()
-    search_min_plot = axis[1].plot(search_min_list[0][0], search_min_list[1][0], label="min case")[0]
+    search_min_plot = axis[1].plot(search_min_list[0][0], search_min_list[1][0], label="min case", alpha=0.7)[0]
     search_max_list = experiment_data.get_search_max()
-    search_max_plot = axis[1].plot(search_max_list[0][0], search_max_list[1][0], label="max case")[0]
+    search_max_plot = axis[1].plot(search_max_list[0][0], search_max_list[1][0], label="max case",c='red', alpha=0.7)[0]
     search_ave_list = experiment_data.get_search_average()
-    search_ave_plot = axis[1].plot(search_ave_list[0][0], search_ave_list[1][0], label="average case")[0]
+    search_ave_plot = axis[1].plot(search_ave_list[0][0], search_ave_list[1][0], label="average case",c='orange', alpha=0.7)[0]
 
     # Animation function - uses the update function to animate
     ani = animation.FuncAnimation(fig=figure, func=update, frames=190, interval=1)
@@ -239,31 +137,32 @@ def plotGraphs(save):
     # loading data
     experiment_data = readCounts("data/insertCount.txt", "data/searchCount.txt")
 
-    # TODO: change log graph to curves of best fit
     # plotting log graphs for both figures
     x_log = np.linspace(1, 50_000, 10_000)
-    y_log = 3 * np.log(x_log)
-    axis[1].plot(x_log, y_log, c="purple", label="3 * log (x)")
-    axis[0].plot(x_log, y_log, c="purple", label="3 * log (x)")
+    y_log_insert = 3 * np.log(x_log)
+    y_log_search = 2 * np.log(x_log)
+    axis[0].plot(x_log, y_log_insert, c="blue", label="3 * log (x)", linewidth=10, alpha=0.25)
+    axis[1].plot(x_log, y_log_search, c="blue", label="2 * log (x)", linewidth=10, alpha=0.25)
 
+    # alpha=0.6, edgecolors='none' - setting for transparency
     # plotting scatter plots for respective search and counts
-    axis[0].scatter(experiment_data.countx, experiment_data.county, s=10, c='green', label="count data")
-    axis[1].scatter(experiment_data.searchx, experiment_data.searchy, s=10, c='blue', label="search data")
+    axis[0].scatter(experiment_data.countx, experiment_data.county, s=10, c='black', label="count data")
+    axis[1].scatter(experiment_data.searchx, experiment_data.searchy, s=10, c='black', label="search data")
 
     # plotting min max and average
     insert_min_list = experiment_data.get_insert_min()
-    axis[0].plot(insert_min_list[0], insert_min_list[1], label="min case")
+    axis[0].plot(insert_min_list[0], insert_min_list[1], label="min case", alpha=0.7)
     insert_max_list = experiment_data.get_insert_max()
-    axis[0].plot(insert_max_list[0], insert_max_list[1], label="max case")
+    axis[0].plot(insert_max_list[0], insert_max_list[1], label="max case", c='red', alpha=0.7)
     insert_ave_list = experiment_data.get_insert_average()
-    axis[0].plot(insert_ave_list[0], insert_ave_list[1], label="average case")
+    axis[0].plot(insert_ave_list[0], insert_ave_list[1], label="average case", c='orange', alpha=0.7)
     # search data
     search_min_list = experiment_data.get_search_min()
-    axis[1].plot(search_min_list[0], search_min_list[1], label="min case")
+    axis[1].plot(search_min_list[0], search_min_list[1], label="min case", alpha=0.7)
     search_max_list = experiment_data.get_search_max()
-    axis[1].plot(search_max_list[0], search_max_list[1], label="max case")
+    axis[1].plot(search_max_list[0], search_max_list[1], label="max case", c='red', alpha=0.7)
     search_ave_list = experiment_data.get_search_average()
-    axis[1].plot(search_ave_list[0], search_ave_list[1], label="average case")
+    axis[1].plot(search_ave_list[0], search_ave_list[1], label="average case", c='orange', alpha=0.7)
 
     # legends
     axis[0].legend(loc="upper left")
