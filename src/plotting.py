@@ -5,8 +5,8 @@ from src.ListGraphPoints import ListGraphPoints
 
 
 def main():
-    plotGraphsAni()
-    # plotGraphs(False)
+    # plotGraphsAni()
+    plotGraphs(False)
 
 
 def readCounts(file_count, file_search):

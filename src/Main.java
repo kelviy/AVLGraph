@@ -53,12 +53,10 @@ public class Main{
                     dataStructure.insert(query);
                     if (insertCount.containsKey(n)) {
                         int count = dataStructure.getInsertCount();
-                        System.out.println(n + "\t" + count);
                         insertCount.get(n).add(count);
                     } else {
                         insertCount.put(n, new TreeSet<>());
                         int count = dataStructure.getInsertCount();
-                        System.out.println(n + "\t" + count);
                         insertCount.get(n).add(count);
                     }
                     dataStructure.delete(query);
