@@ -32,7 +32,7 @@ public class GenericData implements Comparable<GenericData> {
     }
 
     public String toString() {
-        return term + "\t\t\t\t\t | \t" + sentence + " | \t" + score;
+        return term + ": " + sentence + " (" + score + ")";
     }
 
     public String getTerm() {

@@ -23,7 +23,7 @@ public class Experiment{
         }
 
 
-        int[] range = {10, 100, 1000, 2000, 5000, 10000, 15000, 25000, 43000, 50000};
+        int[] range = {10, 100, 1000, 2000, 5000, 10000, 15000, 25000, 35000, 43000, 50000};
         Experiment theExperiment = new Experiment();
         
         for (int n : range) {
@@ -32,12 +32,43 @@ public class Experiment{
 
         theExperiment.saveInsertCount();
         theExperiment.saveSearchCount();
+
+        theExperiment.part1();
+    }
+
+    public void part1() {
+        loadData("data/GenericsKB.txt", 50000);
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("data/test-queries.txt"));
+            String line;
+
+            while((line = reader.readLine()) != null) {
+                GenericData query = new GenericData(line, null, 0);
+                BinaryTreeNode<GenericData> searchResult = dataStructure.find(query);
+
+                System.out.println("Searching for: " + line);
+                System.out.print("Output: ");
+
+                if (searchResult == null) {
+                    System.out.println("Term not found: " + line);
+                } else {
+                    System.out.println(searchResult.getData());
+                }
+
+                System.out.println();
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
     }
 
     public void experiment(int n) {
-        loadData("GenericsKB.txt", n);
+        loadData("data/GenericsKB.txt", n);
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("GenericsKB-queries.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("data/GenericsKB-queries.txt"));
             String line;
 
             while((line = reader.readLine()) != null) {

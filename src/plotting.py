@@ -2,11 +2,21 @@ from matplotlib import animation
 import matplotlib.pyplot as plt
 import numpy as np
 from ListGraphPoints import ListGraphPoints
+import sys
 
 
 def main():
-    # plotGraphsAni()
-    plotGraphs(False)
+    if len(sys.argv) == 2:
+        option = sys.argv[1]
+    else:
+        option = 'p'
+
+    if option == 's':
+        plotGraphs(True)
+    if option == 'a':
+        plotGraphsAni()
+    if option == 'p':
+        plotGraphs(False)
 
 
 def readCounts(file_count, file_search):
@@ -95,16 +105,16 @@ def plotGraphsAni():
 
     # plotting min max and average
     insert_min_list = experiment_data.get_insert_min()
-    insert_min_plot = axis[0].plot(insert_min_list[0][0], insert_min_list[1][0], label="min case", alpha=0.7)[0]
+    insert_min_plot = axis[0].plot(insert_min_list[0][0], insert_min_list[1][0], label="best case", alpha=0.7)[0]
     insert_max_list = experiment_data.get_insert_max()
-    insert_max_plot = axis[0].plot(insert_max_list[0][0], insert_max_list[1][0], label="max case", c='red', alpha=0.7)[0]
+    insert_max_plot = axis[0].plot(insert_max_list[0][0], insert_max_list[1][0], label="worst case", c='red', alpha=0.7)[0]
     insert_ave_list = experiment_data.get_insert_average()
     insert_ave_plot = axis[0].plot(insert_ave_list[0][0], insert_ave_list[1][0], label="average case", c='orange', alpha=0.7)[0]
     # search data
     search_min_list = experiment_data.get_search_min()
-    search_min_plot = axis[1].plot(search_min_list[0][0], search_min_list[1][0], label="min case", alpha=0.7)[0]
+    search_min_plot = axis[1].plot(search_min_list[0][0], search_min_list[1][0], label="best case", alpha=0.7)[0]
     search_max_list = experiment_data.get_search_max()
-    search_max_plot = axis[1].plot(search_max_list[0][0], search_max_list[1][0], label="max case",c='red', alpha=0.7)[0]
+    search_max_plot = axis[1].plot(search_max_list[0][0], search_max_list[1][0], label="worst case",c='red', alpha=0.7)[0]
     search_ave_list = experiment_data.get_search_average()
     search_ave_plot = axis[1].plot(search_ave_list[0][0], search_ave_list[1][0], label="average case",c='orange', alpha=0.7)[0]
 
@@ -151,16 +161,16 @@ def plotGraphs(save):
 
     # plotting min max and average
     insert_min_list = experiment_data.get_insert_min()
-    axis[0].plot(insert_min_list[0], insert_min_list[1], label="min case", alpha=0.7)
+    axis[0].plot(insert_min_list[0], insert_min_list[1], label="best case", alpha=0.7)
     insert_max_list = experiment_data.get_insert_max()
-    axis[0].plot(insert_max_list[0], insert_max_list[1], label="max case", c='red', alpha=0.7)
+    axis[0].plot(insert_max_list[0], insert_max_list[1], label="worst case", c='red', alpha=0.7)
     insert_ave_list = experiment_data.get_insert_average()
     axis[0].plot(insert_ave_list[0], insert_ave_list[1], label="average case", c='orange', alpha=0.7)
     # search data
     search_min_list = experiment_data.get_search_min()
-    axis[1].plot(search_min_list[0], search_min_list[1], label="min case", alpha=0.7)
+    axis[1].plot(search_min_list[0], search_min_list[1], label="best case", alpha=0.7)
     search_max_list = experiment_data.get_search_max()
-    axis[1].plot(search_max_list[0], search_max_list[1], label="max case", c='red', alpha=0.7)
+    axis[1].plot(search_max_list[0], search_max_list[1], label="worst case", c='red', alpha=0.7)
     search_ave_list = experiment_data.get_search_average()
     axis[1].plot(search_ave_list[0], search_ave_list[1], label="average case", c='orange', alpha=0.7)
 
