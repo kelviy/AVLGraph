@@ -4,12 +4,22 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/**
+ * Experiment class to run the experiment for the assignment. The main class is also included in this class. 
+ */
 public class Experiment{
 
+    // AVL Tree data structure
     private AVLTree<GenericData> dataStructure = new AVLTree<>();
+
+    // Sets to store the search and insert counts for each N
     private SortedMap<Integer, TreeSet<Integer>> searchCount = new TreeMap<>();
     private SortedMap<Integer, TreeSet<Integer>> insertCount = new TreeMap<>();
 
+    /**
+     * Main method to run the experiment. The experiment will run for each N in the range array. The experiment will load data from the GenericsKB.txt file and then run the experiment for each N. The experiment will then save the insert and search counts to the insertCount.txt and searchCount.txt files respectively. The experiment will then run part 1 of the assignment. The search and insert data would also be cleared prior to running the experiments. 
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data/insertCount.txt", false));
@@ -36,6 +46,9 @@ public class Experiment{
         theExperiment.part1();
     }
 
+    /**
+     * Part 1 of the assignment. This method will load the data from the GenericsKB.txt file and then run the queries from the test-queries.txt file. The output will be printed to the console. test-queires.txt file can be replaced by GenericsKB-queries.txt file to test more queries. 
+     */
     public void part1() {
         loadData("data/GenericsKB.txt", 50000);
 
@@ -65,6 +78,10 @@ public class Experiment{
         }
     }
 
+    /**
+     * Runs the experiment for a given N. The experiment will load data from the GenericsKB.txt file and then run the queries from the GenericsKB-queries.txt file. The search and insert counts will be stored in the searchCount and insertCount sets respectively.
+     * @param n
+     */
     public void experiment(int n) {
         loadData("data/GenericsKB.txt", n);
         try {
@@ -144,6 +161,9 @@ public class Experiment{
         }
     }
 
+    /**
+     * Saves the insert count to the insertCount.txt file.
+     */
     public void saveInsertCount() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data/insertCount.txt", true));
@@ -159,6 +179,9 @@ public class Experiment{
         }
     }
 
+    /**
+     * Saves the search count to the searchCount.txt file.
+     */
     public void saveSearchCount() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data/searchCount.txt", true));

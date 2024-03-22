@@ -63,10 +63,20 @@ public class AVLTree<dataType extends Comparable<? super dataType>> extends Bina
       return p;
    }
 
+   /**
+    * Insert a new data item into the tree. The method would record the number of comparisons made.
+    * @param d the data item to be inserted
+    */
    public void insert ( dataType d )
    {
       root = insert (d, root);
    }
+   /**
+    * Insert a new data item into the tree. The method would record the number of comparisons made.
+    * @param d the data item to be inserted
+    * @param node the current node
+    * @return
+    */
    public BinaryTreeNode<dataType> insert ( dataType d, BinaryTreeNode<dataType> node )
    {    
       insert_count++;  
@@ -124,6 +134,11 @@ public class AVLTree<dataType extends Comparable<? super dataType>> extends Bina
       return balance (node);
    }
 
+   /**
+    * Find a data item in the tree. The method would record the number of comparisons made.
+    * @param d the data item to be found
+    * @return
+    */
    public BinaryTreeNode<dataType> find ( dataType d )
    {
       search_count++;
@@ -132,6 +147,12 @@ public class AVLTree<dataType extends Comparable<? super dataType>> extends Bina
       else
          return find (d, root);
    }
+   /**
+    * Find a data item in the tree. The method would record the number of comparisons made.
+    * @param d the data item to be found
+    * @param node the current node
+    * @return
+    */
    public BinaryTreeNode<dataType> find ( dataType d, BinaryTreeNode<dataType> node )
    {
       search_count++;
