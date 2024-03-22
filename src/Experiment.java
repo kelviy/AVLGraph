@@ -3,11 +3,12 @@ import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
-public class Main{
 
-    private static AVLTree<GenericData> dataStructure = new AVLTree<>();
-    private static SortedMap<Integer, TreeSet<Integer>> searchCount = new TreeMap<>();
-    private static SortedMap<Integer, TreeSet<Integer>> insertCount = new TreeMap<>();
+public class Experiment{
+
+    private AVLTree<GenericData> dataStructure = new AVLTree<>();
+    private SortedMap<Integer, TreeSet<Integer>> searchCount = new TreeMap<>();
+    private SortedMap<Integer, TreeSet<Integer>> insertCount = new TreeMap<>();
 
     public static void main(String[] args) {
         try {
@@ -23,16 +24,17 @@ public class Main{
 
 
         int[] range = {10, 100, 1000, 2000, 5000, 10000, 15000, 25000, 43000, 50000};
+        Experiment theExperiment = new Experiment();
         
         for (int n : range) {
-            experiment(n);
+            theExperiment.experiment(n);
         }
 
-        saveInsertCount(insertCount);
-        saveSearchCount(searchCount);
+        theExperiment.saveInsertCount();
+        theExperiment.saveSearchCount();
     }
 
-    public static void experiment(int n) {
+    public void experiment(int n) {
         loadData("GenericsKB.txt", n);
         try {
             BufferedReader reader = new BufferedReader(new FileReader("GenericsKB-queries.txt"));
@@ -76,7 +78,7 @@ public class Main{
      * @param fileName
      * @param n
      */
-    public static void loadData(String fileName, int n) {
+    public void loadData(String fileName, int n) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             ArrayList<GenericData> list = new ArrayList<>();
@@ -111,7 +113,7 @@ public class Main{
         }
     }
 
-    public static void saveInsertCount(SortedMap<Integer, TreeSet<Integer>> insertCount) {
+    public void saveInsertCount() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data/insertCount.txt", true));
             for (int i : insertCount.keySet()) {
@@ -126,7 +128,7 @@ public class Main{
         }
     }
 
-    public static void saveSearchCount(SortedMap<Integer, TreeSet<Integer>> searchCount) {
+    public void saveSearchCount() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("data/searchCount.txt", true));
             for (int i : searchCount.keySet()) {
